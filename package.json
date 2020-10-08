@@ -1,0 +1,12 @@
+{
+  "name": "t2schola-test",
+  "version": "1.0.0",
+  "main": "src/main.js",
+  "author": "Kazuki Asakura",
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "puppeteer": "^5.3.1"
+  }
+}
