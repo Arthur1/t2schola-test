@@ -8,5 +8,5 @@ main().then(() => {}).catch(err => {
 
 async function main() {
     const credential = new Credential()
-    await credential.init()
+    await credential.load()
 }
