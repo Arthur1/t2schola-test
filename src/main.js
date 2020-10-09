@@ -19,12 +19,13 @@ async function main() {
     const browser = new Browser()
     await browser.open()
 
-    const portal = new Portal(browser, credential)
-    await portal.login()
+    const portal = new Portal(browser)
+    await portal.login(credential)
 
     console.log('logged in Portal')
 
     const t2schola = new T2Schola(browser)
     await t2schola.login()
     await t2schola.testUserInfo()
+    await t2schola.testCourses()
 }

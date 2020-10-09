@@ -2,6 +2,10 @@
   "name": "t2schola-test",
   "version": "1.0.0",
   "main": "src/main.js",
+  "scripts": {
+    "main": "node src/main.js",
+    "remove": "rm -R credentials/*"
+  },
   "author": "Kazuki Asakura",
   "license": "MIT",
   "type": "module",
