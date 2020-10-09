@@ -1,9 +1,9 @@
-'use strict'
-
 import fs from 'fs/promises'
 import crypto from 'crypto'
 import rl from 'readline-sync'
 import keytar from 'keytar'
+
+const SERVICE_NAME = 'Arthur1/t2schola-test'
 
 export default class Credential {
     constructor() {
@@ -14,7 +14,6 @@ export default class Credential {
         }
         this.keyphrase = null
         this.encryptedUser = {}
-        this.SERVICE_NAME = 'Arthur1/t2schola-test'
     }
 
     async load() {
@@ -29,13 +28,13 @@ export default class Credential {
             await this.encryptUser()
         }
         try {
-            if (!isInit) this.keyphrase = await keytar.findPassword(this.SERVICE_NAME)
+            if (!isInit) this.keyphrase = await keytar.findPassword(SERVICE_NAME)
         } catch (e) {
             console.log(e)
             this.keyphrase = rl.question('Keyphrase?: ', { hideEchoBack: true })
         }
         this.decryptUser()
-        keytar.setPassword(this.SERVICE_NAME, this.user.id, this.keyphrase)
+        keytar.setPassword(SERVICE_NAME, this.user.id, this.keyphrase)
     }
 
     async readEncryptedUser() {
@@ -68,7 +67,6 @@ export default class Credential {
 
     decryptUser() {
         const decryptedData = Credential.decrypt(this.encryptedUser.data, this.encryptedUser.iv, this.keyphrase)
-        console.log(decryptedData.toString('utf-8'))
         this.user = JSON.parse(decryptedData.toString('utf-8'))
     }
 
@@ -96,6 +94,6 @@ export default class Credential {
         const yString = key.slice(3, 4)
         const x = xString.charCodeAt() - 65
         const y = Number(yString) - 1
-        return this.matrixCode[x * 7 + y]
+        return this.user.matrixCode[x * 7 + y]
     }
 }

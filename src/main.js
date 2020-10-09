@@ -1,12 +1,30 @@
 import dotenv from 'dotenv'
 import Credential from './credential.js'
+import Portal from './portal.js'
+import Browser from './browser.js'
+import T2Schola from './t2schola.js'
 
 dotenv.config()
-main().then(() => {}).catch(err => {
+main().then(() => {
+    console.log('fin')
+    process.exit(0)
+}).catch(err => {
     console.error(err)
 })
 
 async function main() {
     const credential = new Credential()
     await credential.load()
+
+    const browser = new Browser()
+    await browser.open()
+
+    const portal = new Portal(browser, credential)
+    await portal.login()
+
+    console.log('logged in Portal')
+
+    const t2schola = new T2Schola(browser)
+    await t2schola.login()
+    await t2schola.testUserInfo()
 }
