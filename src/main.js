@@ -10,6 +10,7 @@ main().then(() => {
     process.exit(0)
 }).catch(err => {
     console.error(err)
+    process.exit(1)
 })
 
 async function main() {
@@ -26,6 +27,10 @@ async function main() {
 
     const t2schola = new T2Schola(browser)
     await t2schola.login()
+    await t2schola.getWsToken()
     await t2schola.testUserInfo()
+    /*** ここまで必須? ***/
+
     await t2schola.testCourses()
+    await t2schola.testCourseDetail()
 }

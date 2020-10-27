@@ -21,6 +21,11 @@ export default class Browser {
         })
     }
 
+    async emulateiPhone() {
+        const iPhoneX = puppeteer.devices['iPhone X']
+        await this.page.emulate(iPhoneX)
+    }
+
     async close() {
         await this.browser.close()
     }
