@@ -1,6 +1,6 @@
 import querystring from 'querystring'
 
-const WSTOKEN_URL = 'https://t2schola.titech.ac.jp/admin/tool/mobile/launch.php'
+const MOBILE_LAUNCH_URL = 'https://t2schola.titech.ac.jp/admin/tool/mobile/launch.php'
 const API_URL = 'https://t2schola.titech.ac.jp/webservice/rest/server.php'
 
 export default class T2Schola {
@@ -16,18 +16,24 @@ export default class T2Schola {
      */
     async login() {
         try {
+            // モバイル端末でないとエラー
             await this.browser.emulateiPhone()
+            // onloadでアプリが自動的に開こうとするのを防止
             await this.browser.page.setJavaScriptEnabled(false)
             const query = {
                 service: 'moodle_mobile_app',
                 passport: Math.random() * 1000,
                 urlscheme: 'mmt2schola',
             }
-            const url = WSTOKEN_URL + '?' + querystring.stringify(query)
+            const url = MOBILE_LAUNCH_URL + '?' + querystring.stringify(query)
             await this.browser.page.goto(url)
+
+            // <a id="launchapp" href="mmt2schola://token={base64_encoded_token}"></a>
             const appLinkElement = await this.browser.page.$('#launchapp')
             const appLinkUrl = await (await appLinkElement.getProperty('href')).jsonValue()
             const token = Buffer.from(appLinkUrl.replace('mmt2schola://token=', ''), 'base64').toString()
+
+            // :::で区切られた文字列の2つ目がwstoken
             this.wstoken = token.split(':::')[1]
             await this.browser.page.setJavaScriptEnabled(true)
         } catch (e) {
@@ -51,7 +57,6 @@ export default class T2Schola {
             const response = await this.browser.page.goto(url, {
                 waitUntil: ['load', 'networkidle0']
             })
-            // console.log(await response.text())
             const data = JSON.parse(await response.text())
             console.log(data.username, data.fullname, data.userid)
             this.userId = data.userid
@@ -64,6 +69,7 @@ export default class T2Schola {
 
     /**
      * 履修している講義一覧の取得
+     * useridが必要
      */
     async testCourses() {
         if (! this.userId) throw 'userId is null!'
@@ -88,6 +94,10 @@ export default class T2Schola {
         }
     }
 
+    /**
+     * 講義の詳細を取得
+     * courseidが必要
+     */
     async testCourseDetail() {
         if (! this.userId) throw 'no courses!'
         const query = {
