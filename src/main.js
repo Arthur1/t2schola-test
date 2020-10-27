@@ -27,7 +27,6 @@ async function main() {
 
     const t2schola = new T2Schola(browser)
     await t2schola.login()
-    await t2schola.getWsToken()
     await t2schola.testUserInfo()
     /*** ここまで必須? ***/
 

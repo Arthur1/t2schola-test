@@ -1,6 +1,5 @@
 import querystring from 'querystring'
 
-const HOME_URL = 'https://t2schola.titech.ac.jp/'
 const WSTOKEN_URL = 'https://t2schola.titech.ac.jp/admin/tool/mobile/launch.php'
 const API_URL = 'https://t2schola.titech.ac.jp/webservice/rest/server.php'
 
@@ -17,24 +16,11 @@ export default class T2Schola {
      */
     async login() {
         try {
-            await this.browser.page.goto(HOME_URL, {
-                waitUntil: ['load', 'networkidle0']
-            }) 
-            // await this.browser.page.screenshot({ path: 'test4.png' })
-        } catch (e) {
-            console.log(e)
-            await this.browser.close()
-            process.exit(1)
-        }
-    }
-
-    async getWsToken() {
-        try {
             await this.browser.emulateiPhone()
             await this.browser.page.setJavaScriptEnabled(false)
             const query = {
                 service: 'moodle_mobile_app',
-                passport: process.env.T2SCHOLA_PASSPORT,
+                passport: Math.random() * 1000,
                 urlscheme: 'mmt2schola',
             }
             const url = WSTOKEN_URL + '?' + querystring.stringify(query)
